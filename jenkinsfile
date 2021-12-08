@@ -1,0 +1,22 @@
+pipeline {
+    agent any
+    stages {
+        stage ("checkout") {
+            steps {
+                git 'https://github.com/venkateshaknu/java.git'
+            }
+        }
+        stage ("maven clean") {
+            steps {
+                sh "mvn clean package"
+            }
+        }
+        stage ("deploying the artifacate to target location") {
+            steps {
+                sshagent(['ssh']) {
+                    sh  "scp -o StrictHostKeyChecking=no target/*.jar  ec2-user@3.109.123.39:/home/ec2-user/dev/"
+    }
+            }
+        }
+    }
+}
